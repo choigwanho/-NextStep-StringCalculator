@@ -12,29 +12,36 @@ public class StringCalculator {
     */
     public int add(String text){
 
-        // 빈 문자열 또는 null 값을 입력할 경우 0을 반환
-        if (text == null || text.isEmpty()) return 0;
+        if (isBlank(text)) return 0;
 
-        // "//"와 "\n" 문자 사이에 커스텀 구분자 지정
+        return sum(toInts(split(text)));
+
+    }
+    private boolean isBlank(String text){
+        return text == null || text.isEmpty();
+    }
+    private String[] split(String text){
         Matcher m = Pattern.compile("//(.)\n(.*)").matcher(text);
-        String[] values;
-
         if (m.find()) {
             String customDelimeter = m.group(1);
-            System.out.println(customDelimeter);
-            values = m.group(2).split(customDelimeter);
-        }else{
-            values = text.split(",|:");
+            return m.group(2).split(customDelimeter);
         }
-
+        return text.split(",|:");
+    }
+    private int[] toInts(String[] values){
+        int[] nums = new int[values.length];
+        for (int i = 0; i < values.length; i++)
+            nums[i] = toPositive(values[i]);
+        return nums;
+    }
+    private int toPositive(String value){
+        int num = Integer.parseInt(value);
+        if (num < 0) throw new RuntimeException("음수가 입력됐습니다.");
+        return num;
+    }
+    private int sum(int[] nums){
         int sum = 0;
-        for (String value: values){
-            // 음수를 전달하는 경우 RuntimeException 예외 처리
-            if (Integer.parseInt(value) < 0) throw new RuntimeException("음수가 입력됐습니다.");
-            sum += Integer.parseInt(value);
-        }
-
+        for (int num : nums) sum += num;
         return sum;
     }
-
 }
