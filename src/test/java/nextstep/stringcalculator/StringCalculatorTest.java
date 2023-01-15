@@ -33,25 +33,24 @@ public class StringCalculatorTest {
     }
 
     @Test
-    @DisplayName("\"1;2;3\"을 전달하는 경우, 6을 출력")
+    @DisplayName("\"1:2:3\"을 전달하는 경우, 6을 출력")
     void getNumbers3() {
-        int result = calculator.calculate("1;2;3");
+        int result = calculator.calculate("1:2:3");
 
         assertThat(result).isEqualTo(6);
     }
 
     @Test
-    @DisplayName("1;2;3;4;5;6 을 전달하는 경우, 21을 출력")
+    @DisplayName("1:2:3:4:5:6 을 전달하는 경우, 21을 출력")
     void getNumbers4() {
-        int result = calculator.calculate("1;2;3;4;5;6");
-
+        int result = calculator.calculate("1:2:3:4:5:6");
         assertThat(result).isEqualTo(21);
     }
 
     @Test
-    @DisplayName("1,2;3 을 전달하는 경우, 에러 발생")
+    @DisplayName("1,2:3 을 전달하는 경우, 에러 발생")
     void containsMultipleSeparator() {
-        assertThrows(NumberFormatException.class, () -> calculator.calculate("1,2;3"));
+        assertThrows(NumberFormatException.class, () -> calculator.calculate("1,2:3"));
     }
 
     @Test
@@ -62,7 +61,14 @@ public class StringCalculatorTest {
 
     @Test
     @DisplayName("1,2,-3 을 전달하는 경우, 에러 발생")
-    void containsNegetiveNumber() {
+    void containsNegativeNumber() {
         assertThrows(RuntimeException.class, () -> calculator.calculate("1,2,-3"));
+    }
+
+    @Test
+    @DisplayName("커스텀 구분자를 전달하는 경우")
+    void getCustomSeparator() {
+        int result = calculator.calculate("//;\\n;1;2;3");
+        assertThat(result).isEqualTo(6);
     }
 }
